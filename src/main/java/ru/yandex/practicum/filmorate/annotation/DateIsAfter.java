@@ -15,8 +15,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface DateIsAfter {
     String message() default "{Date is incorrect}";
+
     String min();
+
     String allowNullValue();
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

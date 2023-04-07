@@ -1,30 +1,33 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
-    private Integer id;
+    Long id;
     @Email(message = "Incorrect Email")
     @NotNull(message = "Email can't be empty")
-    private String email;
+    String email;
     @EqualsAndHashCode.Exclude
-    private String name;
+    String name;
     @EqualsAndHashCode.Exclude
     @NotNull(message = "Birthday can't be empty")
     @Past(message = "Birthday must be correct")
-    private LocalDate birthday;
+    LocalDate birthday;
     @EqualsAndHashCode.Exclude
     @NotBlank(message = "Login can't be empty")
-    private String login;
+    @Pattern(regexp = "\\S+", message = "Login should be without space")
+    String login;
+    Set<UserDto> friend;
 }

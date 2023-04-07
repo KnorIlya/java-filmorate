@@ -1,51 +1,47 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.comparator.FilmComparator;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class FilmService {
-    private final FilmRepository repository;
-    int idCounter = 1;
-    public FilmService() {
-        repository = new FilmRepository();
-    }
+    private final FilmStorage storage;
 
-    public Film addFilm(Film film) {
-        populateId(film);
-        repository.getFilms().put(film.getId(), film);
-        log.info("Add film");
+    public Film addLike(Long id, Long userId) {
+        Film film = storage.getById(id);
+        if (film == null) {
+            throw new NotFoundException("Film not found");
+        }
+        film.getLikes().add(userId);
         return film;
     }
 
-    public Film updateFilm(Film film) {
-        Map<Integer, Film> filmsMap = repository.getFilms();
-        if (filmsMap.containsKey(film.getId())){
-            filmsMap.put(film.getId(),film);
-            log.info("Update film");
-            return film;
-        } else {
-            throw new IllegalArgumentException("Incorrect Id");
+    public Film removeLike(Long id, Long userId) {
+        Map<Long, Film> films = storage.getStorage();
+        if (!films.containsKey(userId)) {
+            throw new NotFoundException("Film not found");
         }
+        Film film = storage.getById(id);
+        film.getLikes().remove(userId);
+        return film;
     }
 
-    public List<Film> getAllFilms() {
-        log.info("Get all films");
-        return new ArrayList<>(repository.getFilms().values());
+    public List<Film> getPopularFilms(Integer count) {
+        Comparator<Film> reverseFilmComparator = new FilmComparator().reversed();
+        return storage.getAll().stream()
+                .sorted(reverseFilmComparator)
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
-    private void populateId(Film film) {
-        if (film.getId() == null) {
-            film.setId(idCounter);
-            idCounter++;
-        }
-    }
 }

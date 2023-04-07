@@ -1,30 +1,38 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.filmorate.annotation.DateIsAfter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
 
-    private Integer id;
+    Long id;
     @NotBlank(message = "Name can't be empty")
-    private String name;
+    String name;
     @EqualsAndHashCode.Exclude
     @NotBlank
     @Size(max = 100)
-    private String description;
+    String description;
     @DateIsAfter(min = "1895-03-21", allowNullValue = "true")
     @NotNull
     @EqualsAndHashCode.Exclude
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
     @NotNull(message = "Duration can't be null")
     @EqualsAndHashCode.Exclude
     @Min(1)
-    private Integer duration;
+    Integer duration;
+    Set<Long> likes;
 }
