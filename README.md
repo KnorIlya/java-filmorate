@@ -10,15 +10,23 @@ A schematic of the filmorate project database, which allows you to find friends,
 
 Get a list of the user's subscribers::  
   
-SELECT u.name
-FROM "user" as u
-JOIN friend as f on f.adresser_id = u.id 
+SELECT u.name  
+FROM "user" as u  
+JOIN friend as f on f.adresser_id = u.id   
 ***
 Get a list of user subscriptions: 
   
-SELECT u.name
-FROM "user" as u
-JOIN friend as f on f.requester_id = u.id  
+SELECT u.name  
+FROM "user" as u  
+JOIN friend as f on f.requester_id = u.id    
+***
+Find all the user's friends
+  
+SELECT u.name  
+FROM "user" as u  
+JOIN friend as f on f.adresser_id = u.id   
+WHERE f.confirm = true  
+
 ***
 Find out all film genres:
   
