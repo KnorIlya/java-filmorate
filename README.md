@@ -1,5 +1,6 @@
 # java-filmorate
-Repository for Filmorate project.
+
+A schematic of the filmorate project database, which allows you to find friends, select popular films, and rate them
 
 [Database schema:](https://dbdiagram.io/d/643d219d6b31947051b777c2)
 
