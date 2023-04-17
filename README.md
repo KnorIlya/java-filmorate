@@ -8,7 +8,13 @@ A schematic of the filmorate project database, which allows you to find friends,
 
 ## Query examples
 
-Find all friends (confirmed or not) of a user:  
+Get a list of the user's subscribers::  
+  
+ SELECT *  
+ FROM friend  
+ WHERE adresser_id = 1  
+***
+Get a list of user subscriptions: 
   
  SELECT *  
  FROM friend  
