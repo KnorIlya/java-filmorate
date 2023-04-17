@@ -18,7 +18,7 @@ Get a list of user subscriptions:
   
  SELECT *  
  FROM friend  
- WHERE adresser_id = 1  
+ WHERE requester_id = 1  
 ***
 Find out all film genres:
   
