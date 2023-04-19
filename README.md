@@ -4,7 +4,7 @@ A schematic of the filmorate project database, which allows you to find friends,
 
 [Database schema:](https://dbdiagram.io/d/643d219d6b31947051b777c2)
 
-![image](https://user-images.githubusercontent.com/117895315/233031005-8963fb25-6620-49ac-99b8-c0f3912cfef4.png)
+![image](https://user-images.githubusercontent.com/117895315/233032247-1361b107-e38a-4c43-a734-ac4e60ebb358.png)
 
 ## Query examples
 
@@ -39,7 +39,7 @@ JOIN genres as g on fg.genre_id = g.id
  
 SELECT f.name, u.name  
 FROM films as f  
-JOIN like_infos as li on f.id = li.film_id  
+JOIN like_info as li on f.id = li.film_id  
 JOIN users as u on u.id = li.user_id  
 ***
 Sort films by popularity:  
@@ -47,6 +47,6 @@ Sort films by popularity:
 SELECT f.name,  
 COUNT (li.film_id) as movie_likes  
 FROM films as f  
-JOIN like_infos as li on f.id = li.film_id  
+JOIN like_info as li on f.id = li.film_id  
 GROUP BY f.name  
 ORDER BY movie_likes DESC  
