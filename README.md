@@ -4,7 +4,7 @@ A schematic of the filmorate project database, which allows you to find friends,
 
 [Database schema:](https://dbdiagram.io/d/643d219d6b31947051b777c2)
 
-![image](https://user-images.githubusercontent.com/117895315/233032247-1361b107-e38a-4c43-a734-ac4e60ebb358.png)
+![image](https://user-images.githubusercontent.com/117895315/233033107-583aa498-c9e3-49e3-a135-aee17c215e69.png)
 
 ## Query examples
 
