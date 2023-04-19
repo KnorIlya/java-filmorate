@@ -49,4 +49,4 @@ COUNT (li.user_id) as movie_likes
 FROM films as f  
 JOIN like_info as li on f.id = li.film_id  
 GROUP BY f.name  
-ORDER BY movie_likes DESC  
+ORDER BY movie_likes DESC
