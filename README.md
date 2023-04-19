@@ -4,49 +4,49 @@ A schematic of the filmorate project database, which allows you to find friends,
 
 [Database schema:](https://dbdiagram.io/d/643d219d6b31947051b777c2)
 
-![image](https://user-images.githubusercontent.com/117895315/232494537-fa823ce6-4221-477d-a22c-b4114aeae17d.png)
+![image](https://user-images.githubusercontent.com/117895315/233031005-8963fb25-6620-49ac-99b8-c0f3912cfef4.png)
 
 ## Query examples
 
 Get a list of the user's subscribers::  
   
 SELECT u.name  
-FROM "user" as u  
-JOIN friend as f on f.adresser_id = u.id   
+FROM users as u  
+JOIN friends as f on f.adresser_id = u.id   
 ***
 Get a list of user subscriptions: 
   
 SELECT u.name  
-FROM "user" as u  
-JOIN friend as f on f.requester_id = u.id    
+FROM users as u  
+JOIN friends as f on f.requester_id = u.id    
 ***
 Find all the user's friends
   
 SELECT u.name  
-FROM "user" as u  
-JOIN friend as f on f.adresser_id = u.id   
+FROM users as u  
+JOIN friends as f on f.adresser_id = u.id   
 WHERE f.confirm = true  
 
 ***
 Find out all film genres:
   
 SELECT f.name, g.name  
-FROM film as f  
-JOIN film_genre as fg on f.id = fg.film_id  
-JOIN genre as g on fg.genre_id = g.id  
+FROM films as f  
+JOIN film_genres as fg on f.id = fg.film_id  
+JOIN genres as g on fg.genre_id = g.id  
  ***
  Find out who liked the film:  
  
 SELECT f.name, u.name  
-FROM film as f  
-JOIN like_info as li on f.id = li.film_id  
-JOIN "user" as u on u.id = li.user_id  
+FROM films as f  
+JOIN like_infos as li on f.id = li.film_id  
+JOIN users as u on u.id = li.user_id  
 ***
 Sort films by popularity:  
   
 SELECT f.name,  
 COUNT (li.film_id) as movie_likes  
-FROM film as f  
-JOIN like_info as li on f.id = li.film_id  
+FROM films as f  
+JOIN like_infos as li on f.id = li.film_id  
 GROUP BY f.name  
 ORDER BY movie_likes DESC  
