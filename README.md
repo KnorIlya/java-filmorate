@@ -45,7 +45,7 @@ JOIN users as u on u.id = li.user_id
 Sort films by popularity:  
   
 SELECT f.name,  
-COUNT (li.film_id) as movie_likes  
+COUNT (li.user_id) as movie_likes  
 FROM films as f  
 JOIN like_info as li on f.id = li.film_id  
 GROUP BY f.name  
