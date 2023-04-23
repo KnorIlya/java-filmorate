@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.handler;
 
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,12 +19,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorInfo> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
         List<String> errors = exception.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage).collect(Collectors.toList());
         log.info("Ошибка пользователя" + errors);
         return new ResponseEntity<>(new ErrorInfo(errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<ErrorInfo> emptyResultDataAccessExceptionHandler() {
+        List<String> errors = new ArrayList<>();
+        errors.add("Entity not found");
+        return new ResponseEntity<>(new ErrorInfo(errors), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotFoundException.class)

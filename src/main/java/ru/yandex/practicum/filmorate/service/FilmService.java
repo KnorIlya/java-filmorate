@@ -2,46 +2,47 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.comparator.FilmComparator;
-import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    private final FilmStorage storage;
+    private final FilmDao filmDao;
+    private final UserService userService;
 
-    public Film addLike(Long id, Long userId) {
-        Film film = storage.getById(id);
-        if (film == null) {
-            throw new NotFoundException("Film not found");
-        }
-        film.getLikes().add(userId);
-        return film;
+    public void addLike(Long filmId, Long userId) {
+        filmDao.addLikeById(filmId, userId);
     }
 
-    public Film removeLike(Long id, Long userId) {
-        Map<Long, Film> films = storage.getStorage();
-        if (!films.containsKey(userId)) {
-            throw new NotFoundException("Film not found");
-        }
-        Film film = storage.getById(id);
-        film.getLikes().remove(userId);
-        return film;
+    public void removeLike(Long filmId, Long userId) {
+        userService.getUser(userId);
+        filmDao.removeLike(filmId, userId);
+    }
+
+    public void delete(Long id) {
+        filmDao.delete(id);
+    }
+
+    public Film create(Film film) {
+        return filmDao.create(film);
+    }
+
+    public Film update(Film film) {
+        return filmDao.update(film);
+    }
+
+    public List<Film> getAll() {
+        return filmDao.getAll();
+    }
+
+    public Film getById(Long id) {
+        return filmDao.getById(id);
     }
 
     public List<Film> getPopularFilms(Integer count) {
-        Comparator<Film> reverseFilmComparator = new FilmComparator().reversed();
-        return storage.getAll().stream()
-                .sorted(reverseFilmComparator)
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmDao.getPopular(count);
     }
-
 }
