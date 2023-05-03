@@ -2,82 +2,78 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.UserDao;
+import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.UserDto;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserStorage storage;
+    private final UserDao userDao;
 
-    public User getUser(Long id) {
-        User user = storage.getById(id);
+    public UserDto getUser(Long id) {
+        User user = userDao.findUserById(id);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        return user;
+        return UserMapper.toDto(user);
     }
 
-    public User addFriend(Long id, Long friendId) {
-        Map<Long, User> userMap = storage.getStorage();
-        if (userMap.containsKey(id) && userMap.containsKey(friendId)) {
-            User friend = storage.getById(friendId);
-            User user = storage.getById(id);
-            user.getFriend().add(userToFriend(friend));
-            friend.getFriend().add(userToFriend(user));
-            return user;
-        } else {
-            throw new NotFoundException("User not found");
-        }
+    public UserDto create(User user) {
+        userDao.create(user);
+        return UserMapper.toDto(user);
     }
 
-    public User removeFriend(Long id, Long friendId) {
-        Map<Long, User> userMap = storage.getStorage();
-        if (userMap.containsKey(id) && userMap.containsKey(friendId)) {
-            User user = storage.getById(id);
-            User friend = storage.getById(friendId);
-            user.getFriend().remove(userToFriend(friend));
-            friend.getFriend().remove(userToFriend(user));
-            return user;
-        } else {
-            throw new NotFoundException("User not found");
-        }
+    public UserDto update(User user) {
+        return UserMapper.toDto(userDao.update(user));
     }
 
-    public Set<UserDto> getAllFriends(Long id) {
-        User user = storage.getById(id);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-        return user.getFriend();
+    public void delete(Long id) {
+        userDao.delete(id);
     }
 
-    public Set<UserDto> getMutualFriends(Long id, Long otherId) {
-        User user = storage.getById(id);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-        User otherUser = storage.getById(otherId);
-        if (otherUser == null) {
-            throw new NotFoundException("Other user not found");
-        }
-        Set<UserDto> intersectionUserDtos = new java.util.HashSet<>(Set.copyOf(user.getFriend()));
-        intersectionUserDtos.retainAll(otherUser.getFriend());
-        return intersectionUserDtos;
+    public List<UserDto> getAll() {
+        return userDao.getAll().stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    private UserDto userToFriend(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .birthday(user.getBirthday())
-                .login(user.getLogin())
-                .build();
+    public void addFriend(Long id, Long friendId) {
+        userDao.addFriend(id, friendId);
+    }
+
+    public void removeFriend(Long userId, Long friendId) {
+        userDao.removeFriend(userId, friendId);
+    }
+
+
+    public List<UserDto> getAllFriends(Long id) {
+        return userDao.getAllFriends(id).stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDto> getAllSubscriptions(Long id) {
+
+        return userDao.getAllSubscriptions(id).stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDto> getMutualFriends(Long id, Long friendId) {
+        return userDao.getMutualFriends(id, friendId).stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDto> getMutualSubscriptions(Long id, Long friendId) {
+        return userDao.getMutualSubscriptions(id, friendId).stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

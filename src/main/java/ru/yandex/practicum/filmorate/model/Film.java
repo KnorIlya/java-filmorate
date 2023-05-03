@@ -34,5 +34,7 @@ public class Film {
     @EqualsAndHashCode.Exclude
     @Min(1)
     Integer duration;
-    Set<Long> likes;
+    Set<Genre> genres;
+    @NotNull(message = "Rating can't be null")
+    Mpa mpa;
 }

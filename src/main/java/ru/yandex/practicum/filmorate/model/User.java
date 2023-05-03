@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @Builder
@@ -29,5 +28,4 @@ public class User {
     @NotBlank(message = "Login can't be empty")
     @Pattern(regexp = "\\S+", message = "Login should be without space")
     String login;
-    Set<UserDto> friend;
 }
